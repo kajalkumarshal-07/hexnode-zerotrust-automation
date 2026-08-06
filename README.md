@@ -2,6 +2,8 @@
 
 Complete Zero Trust automation framework for Hexnode UEM, providing automated security compliance, vulnerability scanning, firewall enforcement, OS updates, bulk provisioning, and SIEM integration.
 
+![Hexnode Zero Trust Poster](ZeroTrust-Poster.png)
+
 ## Directory Structure
 
 ```
