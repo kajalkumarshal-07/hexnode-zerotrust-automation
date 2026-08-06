@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexnode Zero Trust Automation Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .poster {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #00d9ff 0%, #00ff88 100%);
+            border-radius: 15px;
+            color: #1a1a2e;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            border-left: 5px solid #00d9ff;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            border-radius: 2px;
+        }
+        
+        /* Architecture Flow */
+        .architecture {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .arch-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .arch-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+        
+        .arch-box.siem { border-color: #ff6b6b; }
+        .arch-box.hexnode { border-color: #00ff88; }
+        .arch-box.devices { border-color: #ffd93d; }
+        
+        .arch-box h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .arch-box ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .arch-box ul li {
+            padding: 5px 0;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .arch-box ul li::before {
+            content: '>';
+            margin-right: 8px;
+            color: #00d9ff;
+        }
+        
+        .arrow {
+            font-size: 2em;
+            color: #00ff88;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00d9ff;
+            transform: translateY(-3px);
+        }
+        
+        .feature-card .number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #00d9ff;
+        }
+        
+        .feature-card ul {
+            list-style: none;
+        }
+        
+        .feature-card ul li {
+            padding: 4px 0;
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+        
+        .feature-card ul li::before {
+            content: '✓';
+            color: #00ff88;
+            margin-right: 8px;
+        }
+        
+        /* Integration */
+        .integration-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .integration-box {
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .integration-box.main {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+        
+        .integration-box h4 {
+            margin-bottom: 8px;
+        }
+        
+        .integration-box p {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+        
+        .integration-arrow {
+            font-size: 1.5em;
+            color: #00ff88;
+        }
+        
+        /* Benefits */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .benefit-card {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .benefit-card:hover {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .benefit-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #00d9ff;
+        }
+        
+        .benefit-card ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .benefit-card ul li {
+            padding: 4px 0;
+            font-size: 0.9em;
+        }
+        
+        .benefit-card ul li::before {
+            content: '•';
+            color: #00ff88;
+            margin-right: 8px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat .value {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat .label {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+        
+        /* Quick Start */
+        .quick-start {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 30px;
+            font-size: 1.5em;
+            color: #00ff88;
+        }
+        
+        .step:last-child::after {
+            display: none;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin: 0 auto 15px;
+        }
+        
+        .step h4 {
+            margin-bottom: 8px;
+            color: #00d9ff;
+        }
+        
+        .step p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        /* Script Table */
+        .script-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .script-table th,
+        .script-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .script-table th {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            font-weight: 600;
+        }
+        
+        .script-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .script-table .script-name {
+            color: #00ff88;
+            font-family: 'Consolas', monospace;
+        }
+        
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 136, 0.2));
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .cta h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #00d9ff;
+        }
+        
+        .cta-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .cta-item {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .cta-item .label {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .cta-item .value {
+            font-family: 'Consolas', monospace;
+            color: #00ff88;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer p {
+            opacity: 0.6;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body {
+                background: #1a1a2e;
+                padding: 10px;
+            }
+            .poster {
+                box-shadow: none;
+                border: none;
+            }
+            .feature-card:hover,
+            .arch-box:hover,
+            .benefit-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <!-- Header -->
+        <div class="header">
+            <h1>HEXNODE ZERO TRUST</h1>
+            <p class="subtitle">Complete Enterprise Security Automation Suite</p>
+        </div>
+        
+        <!-- Architecture Flow -->
+        <div class="section">
+            <h2 class="section-title">Architecture Flow</h2>
+            <div class="architecture">
+                <div class="arch-box siem">
+                    <h3>SIEM ALERTS</h3>
+                    <ul>
+                        <li>Splunk</li>
+                        <li>Carbon Black</li>
+                        <li>CrowdStrike</li>
+                        <li>Any SIEM</li>
+                    </ul>
+                </div>
+                <div class="arrow">→</div>
+                <div class="arch-box hexnode">
+                    <h3>HEXNODE UEM</h3>
+                    <ul>
+                        <li>REST API Gateway</li>
+                        <li>Automation Engine</li>
+                        <li>Policy Management</li>
+                        <li>Device Groups</li>
+                    </ul>
+                </div>
+                <div class="arrow">→</div>
+                <div class="arch-box devices">
+                    <h3>DEVICES</h3>
+                    <ul>
+                        <li>Windows</li>
+                        <li>macOS</li>
+                        <li>Linux</li>
+                        <li>All Endpoints</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Core Features -->
+        <div class="section">
+            <h2 class="section-title">Core Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="number">1</span>
+                    <h4>Compliance Check</h4>
+                    <ul>
+                        <li>Firewall Status</li>
+                        <li>Disk Encryption</li>
+                        <li>Defender Health</li>
+                        <li>Update Status</li>
+                        <li>Root/Jailbreak Detection</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <span class="number">2</span>
+                    <h4>Vulnerability Scan</h4>
+                    <ul>
+                        <li>CVE Detection</li>
+                        <li>Software Audit</li>
+                        <li>Risk Scoring</li>
+                        <li>Suspicious Processes</li>
+                        <li>Network Analysis</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <span class="number">3</span>
+                    <h4>Auto Quarantine</h4>
+                    <ul>
+                        <li>Immediate Isolation</li>
+                        <li>Policy Enforcement</li>
+                        <li>Lost Mode Activation</li>
+                        <li>Alert Notifications</li>
+                        <li>Auto-Remediation</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <span class="number">4</span>
+                    <h4>Firewall Control</h4>
+                    <ul>
+                        <li>Port Blocking</li>
+                        <li>IP Blacklist</li>
+                        <li>Service Management</li>
+                        <li>Connection Monitoring</li>
+                        <li>Logging & Alerts</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <span class="number">5</span>
+                    <h4>OS Updates</h4>
+                    <ul>
+                        <li>Auto-Download</li>
+                        <li>Auto-Install</li>
+                        <li>Critical Patch Priority</li>
+                        <li>Compliance Check</li>
+                        <li>Reboot Management</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <span class="number">6</span>
+                    <h4>Bulk Provisioning</h4>
+                    <ul>
+                        <li>CSV Import</li>
+                        <li>Policy Assignment</li>
+                        <li>Group Management</li>
+                        <li>App Deployment</li>
+                        <li>Welcome Messages</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Integration Ecosystem -->
+        <div class="section">
+            <h2 class="section-title">Integration Ecosystem</h2>
+            <div class="integration-flow">
+                <div class="integration-box">
+                    <h4>Splunk</h4>
+                    <p>HEC Webhook</p>
+                </div>
+                <div class="integration-arrow">→</div>
+                <div class="integration-box main">
+                    <h4>HEXNODE API</h4>
+                    <p>Central Hub</p>
+                </div>
+                <div class="integration-arrow">→</div>
+                <div class="integration-box">
+                    <h4>Carbon Black</h4>
+                    <p>EDR Alerts</p>
+                </div>
+                <div class="integration-arrow">→</div>
+                <div class="integration-box">
+                    <h4>CrowdStrike</h4>
+                    <p>Falcon XDR</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Benefits -->
+        <div class="section">
+            <h2 class="section-title">Security Benefits</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">🛡️</div>
+                    <h4>Zero Trust Architecture</h4>
+                    <ul>
+                        <li>Never Trust</li>
+                        <li>Always Verify</li>
+                        <li>Least Privilege</li>
+                        <li>Micro-segmentation</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">👁️</div>
+                    <h4>Real-Time Monitoring</h4>
+                    <ul>
+                        <li>24/7 Scanning</li>
+                        <li>Threat Detection</li>
+                        <li>Compliance Checks</li>
+                        <li>Anomaly Alerts</li>
+                    </ul>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">⚡</div>
+                    <h4>Automated Response</h4>
+                    <ul>
+                        <li>&lt; 5 min Remediation</li>
+                        <li>Auto-Fix Issues</li>
+                        <li>Policy Enforcement</li>
+                        <li>Self-Healing</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="value">85%</div>
+                    <div class="label">Faster Threat Response</div>
+                </div>
+                <div class="stat">
+                    <div class="value">99.9%</div>
+                    <div class="label">Security Uptime</div>
+                </div>
+                <div class="stat">
+                    <div class="value">100%</div>
+                    <div class="label">Policy Compliance</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Start Guide -->
+        <div class="section">
+            <h2 class="section-title">Quick Start Guide</h2>
+            <div class="quick-start">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Configure</h4>
+                    <p>Edit hexnode_config.json with your API credentials</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Upload</h4>
+                    <p>Upload scripts to Hexnode Custom Scripts repository</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Create</h4>
+                    <p>Set up automations with triggers and schedules</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Deploy</h4>
+                    <p>Enable and monitor your Zero Trust automation</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Script Inventory -->
+        <div class="section">
+            <h2 class="section-title">Script Inventory</h2>
+            <table class="script-table">
+                <thead>
+                    <tr>
+                        <th>Script Name</th>
+                        <th>Purpose</th>
+                        <th>Platform</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="script-name">Device-Compliance-Quarantine.ps1</td>
+                        <td>Auto-quarantine non-compliant devices</td>
+                        <td>Windows</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">Vulnerability-Scanner.ps1</td>
+                        <td>Scan for CVEs and threats</td>
+                        <td>Windows</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">Enforce-FirewallServices.ps1</td>
+                        <td>Block ports and enforce policy</td>
+                        <td>Windows</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">Orchestrate-OSUpdates.ps1</td>
+                        <td>Automate Windows patches</td>
+                        <td>Windows</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">Bulk-Provision-Devices.ps1</td>
+                        <td>CSV-based device onboarding</td>
+                        <td>Windows</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">hexnode_security_api.py</td>
+                        <td>Python API client for security ops</td>
+                        <td>Cross-platform</td>
+                    </tr>
+                    <tr>
+                        <td class="script-name">siem_webhook_server.py</td>
+                        <td>SIEM integration webhook server</td>
+                        <td>Cross-platform</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- CTA -->
+        <div class="cta">
+            <h3>Ready to Implement Zero Trust Automation?</h3>
+            <div class="cta-info">
+                <div class="cta-item">
+                    <div class="label">Location</div>
+                    <div class="value">C:\Users\SAM\Hexnode-ZeroTrust</div>
+                </div>
+                <div class="cta-item">
+                    <div class="label">Config File</div>
+                    <div class="value">Config\hexnode_config.json</div>
+                </div>
+                <div class="cta-item">
+                    <div class="label">Start Command</div>
+                    <div class="value">.\Invoke-ZeroTrustOrchestration.ps1 -RunAll</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Hexnode Zero Trust Automation Suite v1.0 | Enterprise Security Automation Framework</p>
+        </div>
+    </div>
+</body>
+</html>

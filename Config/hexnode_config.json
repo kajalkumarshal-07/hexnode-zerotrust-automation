@@ -1,0 +1,54 @@
+{
+  "hexnode": {
+    "api_url": "https://yourportal.hexnodemdm.com/api/v1",
+    "api_key": "YOUR_API_KEY_HERE",
+    "portal_url": "https://yourportal.hexnodemdm.com"
+  },
+  "quarantine": {
+    "quarantine_group_id": 505,
+    "compliance_checks": {
+      "min_os_version": true,
+      "encryption_required": true,
+      "firewall_enabled": true,
+      "antivirus_running": true,
+      "jailbreak_detection": true
+    }
+  },
+  "vulnerability_scan": {
+    "critical_cves": ["CVE-2024-21338", "CVE-2024-38063"],
+    "vulnerable_software": ["lib-vulnerable.jar", "outdated-chrome.exe"],
+    "scan_paths": [
+      "C:\\Program Files",
+      "C:\\Program Files (x86)",
+      "C:\\Windows\\System32"
+    ]
+  },
+  "firewall": {
+    "enforce_windows_firewall": true,
+    "blocked_ports": [3389, 445, 135, 137, 138, 139],
+    "required_services": ["WinDefend", "MpsSvc", "wuauserv"]
+  },
+  "os_updates": {
+    "auto_install": true,
+    "reboot_allowed": false,
+    "maintenance_window": {
+      "start": "02:00",
+      "end": "04:00"
+    }
+  },
+  "siem": {
+    "splunk_webhook": "https://your-splunk:8088/services/collector",
+    "splunk_token": "YOUR_SPLUNK_HEC_TOKEN",
+    "alert_threshold": "high",
+    "auto_remediate": true
+  },
+  "provisioning": {
+    "csv_path": "C:\\Hexnode-ZeroTrust\\BulkProvisioning\\devices.csv",
+    "default_group_id": 100,
+    "policy_mapping": {
+      "store_nyc": 201,
+      "store_la": 202,
+      "corporate": 203
+    }
+  }
+}
